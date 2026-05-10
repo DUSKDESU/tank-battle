@@ -205,7 +205,7 @@ const LEVELS = [
 function loadLevel(n) {
   const idx = Math.min(n - 1, LEVELS.length - 1);
   game.map = LEVELS[idx].map(r => [...r]);
-  game.player = createTank(W / 2 - 1.5 * TILE, (ROWS - 2) * TILE, 'player');
+  game.player = createTank(W / 2 - 1.5 * TILE, (ROWS - 3) * TILE, 'player');
   game.player.dir = DIR.UP;
   game.enemies = [];
   game.bullets = [];
@@ -422,7 +422,7 @@ function update() {
         if (game.lives > 0) {
           setTimeout(() => {
             if (!game.gameOver) {
-              game.player = createTank(W / 2 - 1.5 * TILE, (ROWS - 2) * TILE, 'player');
+              game.player = createTank(W / 2 - 1.5 * TILE, (ROWS - 3) * TILE, 'player');
               game.player.dir = DIR.UP;
             }
           }, 1000);
