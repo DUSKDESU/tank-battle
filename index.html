@@ -113,6 +113,7 @@ const startBtn = document.getElementById('start-btn');
 
 // --- Constants ---
 const TILE = 32;
+const TANK_SIZE = 30;
 const COLS = 20;
 const ROWS = 15;
 const W = COLS * TILE;
@@ -205,7 +206,9 @@ const LEVELS = [
 function loadLevel(n) {
   const idx = Math.min(n - 1, LEVELS.length - 1);
   game.map = LEVELS[idx].map(r => [...r]);
-  game.player = createTank(W / 2 - 1.5 * TILE, (ROWS - 3) * TILE, 'player');
+  game.spawnX = 8 * TILE + Math.floor((TILE - TANK_SIZE) / 2);
+  game.spawnY = 12 * TILE;
+  game.player = createTank(game.spawnX, game.spawnY, 'player');
   game.player.dir = DIR.UP;
   game.enemies = [];
   game.bullets = [];
@@ -219,8 +222,8 @@ function loadLevel(n) {
 function createTank(x, y, type) {
   return {
     x, y,
-    w: TILE * 1.5,
-    h: TILE * 1.5,
+    w: TANK_SIZE,
+    h: TANK_SIZE,
     dir: DIR.DOWN,
     speed: type === 'player' ? 2 : (type === 'fast' ? 1.5 : 1),
     type,
@@ -233,11 +236,11 @@ function createTank(x, y, type) {
 
 function spawnEnemy() {
   if (game.enemiesToSpawn <= 0) return;
-  const spawns = [{ x: 0, y: 0 }, { x: W / 2 - TILE * 0.75, y: 0 }, { x: W - TILE * 1.5, y: 0 }];
+  const spawns = [{ x: 0, y: 0 }, { x: W / 2 - TANK_SIZE / 2, y: 0 }, { x: W - TANK_SIZE, y: 0 }];
   const s = spawns[Math.floor(Math.random() * spawns.length)];
   // Check no overlap
   for (const e of game.enemies) {
-    if (e.alive && overlap(s.x, s.y, TILE * 1.5, TILE * 1.5, e.x, e.y, e.w, e.h)) return;
+    if (e.alive && overlap(s.x, s.y, TANK_SIZE, TANK_SIZE, e.x, e.y, e.w, e.h)) return;
   }
   const types = ['normal', 'normal', 'normal', 'fast', 'fast', 'heavy'];
   const type = types[Math.floor(Math.random() * types.length)];
@@ -422,7 +425,9 @@ function update() {
         if (game.lives > 0) {
           setTimeout(() => {
             if (!game.gameOver) {
-              game.player = createTank(W / 2 - 1.5 * TILE, (ROWS - 3) * TILE, 'player');
+              game.spawnX = 8 * TILE + Math.floor((TILE - TANK_SIZE) / 2);
+  game.spawnY = 12 * TILE;
+  game.player = createTank(game.spawnX, game.spawnY, 'player');
               game.player.dir = DIR.UP;
             }
           }, 1000);
